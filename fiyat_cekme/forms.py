@@ -7,6 +7,9 @@ class KategoriForm(forms.ModelForm):
     class Meta:
         model = Kategori
         fields = ['isim']
+        widgets = {
+            'isim': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Kategori adı girin'}),
+        }
 
 class EslesmeForm(forms.ModelForm):
     class Meta:

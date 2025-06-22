@@ -208,3 +208,8 @@ MESSAGE_TAGS = {
     messages.ERROR: 'danger',
 }
 
+
+
+CSRF_TRUSTED_ORIGINS = ["https://8000-i38qly55svfe5klpz13hi-117f7559.manusvm.computer"]
+
+
