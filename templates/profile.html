@@ -1,0 +1,396 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil - PriceSync</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect rx='7' width='32' height='32' fill='%231e3a8a'/><text x='6' y='23' font-size='16' font-family='Arial' fill='white' font-weight='bold'>PS</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-cyan: #06b6d4;
+            --gradient-bg: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #06b6d4 100%);
+            --text-light: #e2e8f0;
+            --text-dark: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: rgba(30, 58, 138, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            background: linear-gradient(45deg, #06b6d4, #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 2px;
+            left: 8px;
+            bottom: 8px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+            left: 12px;
+            bottom: 12px;
+        }
+
+        .chart-arrow {
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            right: 6px;
+            top: 6px;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-cyan) !important;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 0.5rem;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+        }
+
+        .profile-info {
+            text-align: center;
+        }
+
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .profile-email {
+            color: #64748b;
+            margin-bottom: 1rem;
+        }
+
+        .profile-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .page-header, .content-card {
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line chart-arrow"></i>
+                </div>
+                PriceSync
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'fiyat_cek' %}">
+                            <i class="fas fa-chart-line me-1"></i>Fiyat Çekme
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'profile' %}">
+                            <i class="fas fa-user me-1"></i>Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'settings' %}">
+                            <i class="fas fa-cog me-1"></i>Ayarlar
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Çıkış
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-user me-2"></i>
+                    Profil
+                </h1>
+                <p class="page-subtitle">
+                    Hesap bilgilerinizi ve istatistiklerinizi görüntüleyin.
+                </p>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="row">
+                <!-- Profile Info -->
+                <div class="col-lg-4">
+                    <div class="content-card">
+                        <div class="profile-info">
+                            <div class="profile-avatar">
+                                {{ user.first_name.0|default:user.username.0|upper }}{{ user.last_name.0|upper }}
+                            </div>
+                            <div class="profile-name">
+                                {{ user.first_name|default:user.username }} {{ user.last_name }}
+                            </div>
+                            <div class="profile-email">
+                                {{ user.email|default:"E-posta belirtilmemiş" }}
+                            </div>
+                            <div class="profile-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">{{ kategoriler.count }}</div>
+                                    <div class="stat-label">Kategori</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">{{ eslesmeler.count }}</div>
+                                    <div class="stat-label">Ürün</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">{{ user.date_joined|timesince }}</div>
+                                    <div class="stat-label">Üyelik Süresi</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="col-lg-8">
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-bolt"></i>
+                            Hızlı İşlemler
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'fiyat_cek' %}" class="btn btn-primary w-100">
+                                    <i class="fas fa-chart-line me-2"></i>
+                                    Fiyat Çekme Paneli
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'settings' %}" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-cog me-2"></i>
+                                    Ayarlar
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'bildirimler' %}" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-bell me-2"></i>
+                                    Bildirimler
+                                </a>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <a href="{% url 'home' %}" class="btn btn-outline-primary w-100">
+                                    <i class="fas fa-home me-2"></i>
+                                    Ana Sayfa
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Account Details -->
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Hesap Detayları
+                        </h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>Kullanıcı Adı:</strong><br>
+                                <span class="text-muted">{{ user.username }}</span>
+                            </div>
+                            <div class="col-md-6">
+                                <strong>E-posta:</strong><br>
+                                <span class="text-muted">{{ user.email|default:"Belirtilmemiş" }}</span>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <strong>Üyelik Tarihi:</strong><br>
+                                <span class="text-muted">{{ user.date_joined|date:"d.m.Y H:i" }}</span>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <strong>Son Giriş:</strong><br>
+                                <span class="text-muted">{{ user.last_login|date:"d.m.Y H:i"|default:"Hiç giriş yapılmamış" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

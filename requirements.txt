@@ -1,0 +1,14 @@
+Django>=4.2,<5.1
+django-jazzmin
+django-extensions
+django-ratelimit
+python-decouple
+beautifulsoup4
+pandas
+openpyxl
+requests
+lxml
+gunicorn
+Pillow
+django-cors-headers
+

@@ -1,0 +1,707 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Akakçe BuyBox - E-ticaret Fiyat Takibi ve Rakip Analizi</title>
+    <meta name="description" content="Akakçe BuyBox ile rakiplerinizin fiyatlarını takip edin, kendi fiyatlarınızla karşılaştırın ve rekabette öne geçin. Otomatik fiyat çekme, Excel raporları ve detaylı analiz.">
+    <meta name="keywords" content="akakçe fiyat takibi, e-ticaret fiyat karşılaştırma, rakip analizi, fiyat izleme, buybox, e-ticaret araçları">
+    <link rel="icon" type="image/png" href="{% static 'img/akakce_buybox_favicon.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-orange: #f97316;
+            --gradient-bg: linear-gradient(135deg, #1e3a8a 0%, #1e40af 25%, #3b82f6 50%, #f97316 100%);
+            --text-light: #e2e8f0;
+            --text-dark: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --section-bg: rgba(248, 250, 252, 0.8);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--primary-blue) !important;
+            text-decoration: none;
+        }
+
+        .navbar-brand img {
+            height: 60px;
+            margin-right: 12px;
+        }
+
+        .nav-link {
+            color: var(--text-dark) !important;
+            font-weight: 500;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-orange) !important;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-orange));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(249, 115, 22, 0.4);
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-orange));
+        }
+
+        .btn-outline-primary {
+            border: 2px solid var(--primary-blue);
+            color: var(--primary-blue);
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: var(--primary-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.2;
+        }
+
+        .hero .lead {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-orange);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 0;
+            background: var(--section-bg);
+        }
+
+        .feature-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-orange));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 5rem 0;
+            background: white;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .step-number {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .step-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--primary-blue);
+        }
+
+        /* Pricing */
+        .pricing {
+            padding: 5rem 0;
+            background: var(--section-bg);
+        }
+
+        .pricing-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            height: 100%;
+        }
+
+        .pricing-card.featured {
+            border: 3px solid var(--primary-orange);
+            transform: scale(1.05);
+        }
+
+        .pricing-badge {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-orange);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .pricing-price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin: 1rem 0;
+        }
+
+        .pricing-features {
+            list-style: none;
+            padding: 0;
+            margin: 2rem 0;
+        }
+
+        .pricing-features li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .pricing-features li:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-blue);
+            color: white;
+            padding: 3rem 0 1rem;
+        }
+
+        .footer h5 {
+            color: var(--primary-orange);
+            margin-bottom: 1rem;
+        }
+
+        .footer a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer a:hover {
+            opacity: 1;
+            color: var(--primary-orange);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero-stats {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .pricing-card.featured {
+                transform: none;
+                margin-top: 2rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <img src="{% static 'img/akakce_buybox_logo.png' %}" alt="Akakçe BuyBox">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Özellikler</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#how-it-works">Nasıl Çalışır</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#pricing">Fiyatlar</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'fiyat_cek' %}">
+                                <i class="fas fa-chart-line me-1"></i>Panel
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Çıkış</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="btn btn-outline-primary me-2" href="{% url 'login' %}">Giriş Yap</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-primary" href="{% url 'register' %}">Ücretsiz Başla</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <div class="hero-content animate-fade-in-up">
+                        <h1>Akakçe'deki Rakiplerinizi <span style="color: var(--primary-orange);">Takip Edin</span></h1>
+                        <p class="lead">
+                            E-ticaret sitenizin fiyatlarını Akakçe'deki rakiplerinizle otomatik olarak karşılaştırın. 
+                            Rekabette öne geçin, satışlarınızı artırın.
+                        </p>
+                        <div class="d-flex gap-3 flex-wrap">
+                            {% if not user.is_authenticated %}
+                                <a href="{% url 'register' %}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-rocket me-2"></i>Ücretsiz Başla
+                                </a>
+                                <a href="#how-it-works" class="btn btn-outline-primary btn-lg">
+                                    <i class="fas fa-play me-2"></i>Nasıl Çalışır?
+                                </a>
+                            {% else %}
+                                <a href="{% url 'fiyat_cek' %}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-chart-line me-2"></i>Panele Git
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="hero-stats">
+                            <div class="stat-item">
+                                <div class="stat-number">10K+</div>
+                                <div class="stat-label">Takip Edilen Ürün</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">500+</div>
+                                <div class="stat-label">Aktif Kullanıcı</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number">%25</div>
+                                <div class="stat-label">Ortalama Kar Artışı</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="text-center">
+                        <img src="{% static 'img/panel1.PNG' %}" alt="Akakçe BuyBox Dashboard" class="img-fluid rounded shadow-lg">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3" style="color: var(--primary-blue);">Güçlü Özellikler</h2>
+                <p class="lead">E-ticaret işinizi bir üst seviyeye taşıyacak araçlar</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3 class="feature-title">Otomatik Fiyat Çekme</h3>
+                        <p>Akakçe'deki rakip fiyatlarını otomatik olarak çeker. Manuel işlem gerektirmez, zamandan tasarruf sağlar.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3 class="feature-title">Detaylı Analiz</h3>
+                        <p>Fiyat farklarını analiz edin, hangi ürünlerde avantajlı olduğunuzu görün. Excel raporları ile detaylı inceleme.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-download"></i>
+                        </div>
+                        <h3 class="feature-title">Excel Raporları</h3>
+                        <p>Tüm verileri Excel formatında indirin. Koyu tema ile profesyonel görünüm, kolay paylaşım.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-layer-group"></i>
+                        </div>
+                        <h3 class="feature-title">Kategori Yönetimi</h3>
+                        <p>Ürünlerinizi kategorilere ayırın. Organize çalışın, daha verimli analiz yapın.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <h3 class="feature-title">Anlık Bildirimler</h3>
+                        <p>Önemli fiyat değişikliklerinde anında haberdar olun. Fırsatları kaçırmayın.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3 class="feature-title">Güvenli & Hızlı</h3>
+                        <p>Verileriniz güvende. Hızlı işlem, güvenilir sonuçlar. 7/24 kesintisiz hizmet.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3" style="color: var(--primary-blue);">Nasıl Çalışır?</h2>
+                <p class="lead">3 basit adımda rakiplerinizi takip etmeye başlayın</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h3 class="step-title">Kayıt Olun</h3>
+                        <p>Ücretsiz hesap oluşturun. E-posta ile hızlı kayıt, anında kullanmaya başlayın.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h3 class="step-title">Linkleri Ekleyin</h3>
+                        <p>Akakçe linklerini ve kendi site linklerinizi ekleyin. Kategorilere ayırarak organize edin.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h3 class="step-title">Analiz Edin</h3>
+                        <p>Fiyatları çekin, karşılaştırın ve Excel raporu indirin. Rekabette öne geçin!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="display-4 fw-bold mb-3" style="color: var(--primary-blue);">Fiyatlandırma</h2>
+                <p class="lead">İhtiyacınıza uygun planı seçin</p>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card">
+                        <h3 style="color: var(--primary-blue);">Başlangıç</h3>
+                        <div class="pricing-price">Ücretsiz</div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check text-success me-2"></i>5 ürün linki</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Temel fiyat çekme</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Excel raporu</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Otomatik güncelleme</li>
+                            <li><i class="fas fa-times text-danger me-2"></i>Öncelikli destek</li>
+                        </ul>
+                        <a href="{% url 'register' %}" class="btn btn-outline-primary w-100">Ücretsiz Başla</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card featured">
+                        <div class="pricing-badge">En Popüler</div>
+                        <h3 style="color: var(--primary-blue);">Profesyonel</h3>
+                        <div class="pricing-price">₺75<small>/ay</small></div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check text-success me-2"></i>Sınırsız ürün</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Otomatik fiyat çekme</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Gelişmiş raporlar</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Günlük güncelleme</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Öncelikli destek</li>
+                        </ul>
+                        <a href="{% url 'register' %}" class="btn btn-primary w-100">Hemen Başla</a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="pricing-card">
+                        <h3 style="color: var(--primary-blue);">Kurumsal</h3>
+                        <div class="pricing-price">İletişim</div>
+                        <ul class="pricing-features">
+                            <li><i class="fas fa-check text-success me-2"></i>Özel çözümler</li>
+                            <li><i class="fas fa-check text-success me-2"></i>API entegrasyonu</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Özel raporlar</li>
+                            <li><i class="fas fa-check text-success me-2"></i>7/24 destek</li>
+                            <li><i class="fas fa-check text-success me-2"></i>Eğitim & danışmanlık</li>
+                        </ul>
+                        <a href="mailto:info@akakcebuybox.com" class="btn btn-outline-primary w-100">İletişime Geç</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <h5>Akakçe BuyBox</h5>
+                    <p>E-ticaret işletmeniz için profesyonel fiyat takibi ve rakip analizi çözümü.</p>
+                    <div class="d-flex gap-3">
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Ürün</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#features">Özellikler</a></li>
+                        <li><a href="#pricing">Fiyatlar</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Entegrasyonlar</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Destek</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Yardım Merkezi</a></li>
+                        <li><a href="#">Dokümantasyon</a></li>
+                        <li><a href="#">İletişim</a></li>
+                        <li><a href="#">Durum</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Şirket</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Kariyer</a></li>
+                        <li><a href="#">Basın</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h5>Yasal</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#">Gizlilik</a></li>
+                        <li><a href="#">Şartlar</a></li>
+                        <li><a href="#">Çerezler</a></li>
+                        <li><a href="#">KVKK</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.2);">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <p>&copy; 2024 Akakçe BuyBox. Tüm hakları saklıdır.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>Türkiye'nin en güvenilir fiyat takip platformu</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Navbar background on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            }
+        });
+
+        // Animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in-up');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.feature-card, .step-card, .pricing-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ayarlar - PriceSync</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32'><rect rx='7' width='32' height='32' fill='%231e3a8a'/><text x='6' y='23' font-size='16' font-family='Arial' fill='white' font-weight='bold'>PS</text></svg>">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --primary-cyan: #06b6d4;
+            --gradient-bg: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #06b6d4 100%);
+            --text-light: #e2e8f0;
+            --text-dark: #1e293b;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --sidebar-bg: rgba(30, 58, 138, 0.95);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--gradient-bg);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .navbar {
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white !important;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 12px;
+            background: linear-gradient(45deg, #06b6d4, #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 2px;
+            left: 8px;
+            bottom: 8px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 2px;
+            left: 12px;
+            bottom: 12px;
+        }
+
+        .chart-arrow {
+            color: white;
+            font-size: 20px;
+            position: absolute;
+            right: 6px;
+            top: 6px;
+        }
+
+        .nav-link {
+            color: var(--text-light) !important;
+            font-weight: 500;
+            margin: 0 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-cyan) !important;
+        }
+
+        .main-content {
+            padding: 2rem 0;
+        }
+
+        .page-header {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            color: #64748b;
+            font-size: 1.1rem;
+        }
+
+        .content-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .card-title i {
+            margin-right: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            font-weight: 500;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary-cyan);
+            box-shadow: 0 0 0 3px rgba(6, 182, 212, 0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+            background: linear-gradient(45deg, var(--primary-blue), var(--primary-cyan));
+        }
+
+        .alert {
+            border-radius: 12px;
+            border: none;
+            margin-bottom: 1.5rem;
+        }
+
+        .alert-success {
+            background: rgba(34, 197, 94, 0.1);
+            color: #16a34a;
+        }
+
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.1);
+            color: #dc2626;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .page-header, .content-card {
+                padding: 1.5rem;
+            }
+            
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <div class="logo-icon">
+                    <i class="fas fa-chart-line chart-arrow"></i>
+                </div>
+                PriceSync
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'fiyat_cek' %}">
+                            <i class="fas fa-chart-line me-1"></i>Fiyat Çekme
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'profile' %}">
+                            <i class="fas fa-user me-1"></i>Profil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'settings' %}">
+                            <i class="fas fa-cog me-1"></i>Ayarlar
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-1"></i>Çıkış
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="container">
+            <!-- Page Header -->
+            <div class="page-header">
+                <h1 class="page-title">
+                    <i class="fas fa-cog me-2"></i>
+                    Ayarlar
+                </h1>
+                <p class="page-subtitle">
+                    Hesap ayarlarınızı ve tercihlerinizi yönetin.
+                </p>
+            </div>
+
+            <!-- Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        <i class="fas fa-info-circle me-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="row">
+                <!-- Account Settings -->
+                <div class="col-lg-6">
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-user"></i>
+                            Hesap Bilgileri
+                        </h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="username" class="form-label">Kullanıcı Adı</label>
+                                <input type="text" class="form-control" id="username" value="{{ user.username }}" readonly>
+                                <small class="text-muted">Kullanıcı adı değiştirilemez.</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email" class="form-label">E-posta</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ user.email }}">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="first_name" class="form-label">Ad</label>
+                                <input type="text" class="form-control" id="first_name" value="{{ user.first_name }}" readonly>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="last_name" class="form-label">Soyad</label>
+                                <input type="text" class="form-control" id="last_name" value="{{ user.last_name }}" readonly>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Kaydet
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Preferences -->
+                <div class="col-lg-6">
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-sliders-h"></i>
+                            Tercihler
+                        </h3>
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="default_category" class="form-label">Varsayılan Kategori</label>
+                                <select class="form-select" id="default_category" name="default_category">
+                                    <option value="">Seçiniz...</option>
+                                    {% for kategori in kategoriler %}
+                                        <option value="{{ kategori.id }}" {% if kategori.id == default_category_id %}selected{% endif %}>
+                                            {{ kategori.isim }}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="theme" class="form-label">Tema</label>
+                                <select class="form-select" id="theme" name="theme">
+                                    <option value="light" {% if theme == 'light' %}selected{% endif %}>Açık Tema</option>
+                                    <option value="dark" {% if theme == 'dark' %}selected{% endif %}>Koyu Tema</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-2"></i>Tercihleri Kaydet
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Account Info -->
+                    <div class="content-card">
+                        <h3 class="card-title">
+                            <i class="fas fa-info-circle"></i>
+                            Hesap Bilgileri
+                        </h3>
+                        <div class="row">
+                            <div class="col-6">
+                                <strong>Üyelik Tarihi:</strong><br>
+                                <span class="text-muted">{{ user.date_joined|date:"d.m.Y" }}</span>
+                            </div>
+                            <div class="col-6">
+                                <strong>Son Giriş:</strong><br>
+                                <span class="text-muted">{{ user.last_login|date:"d.m.Y H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
