@@ -145,13 +145,17 @@ def profile(request):
     if request.method == "POST":
         if "ekle_kategori" in request.POST:
             kategori_form = KategoriForm(request.POST)
+            print("FORM VALID?", kategori_form.is_valid())
+            print("FORM HATALARI:", kategori_form.errors)
             if kategori_form.is_valid():
                 kategori = kategori_form.save(commit=False)
                 kategori.user = request.user
                 kategori.save()
-                bildirim_ekle(request.user, f"Yeni kategori eklendi: {kategori.isim}", notification_type="success")
-                messages.success(request, "Kategori eklendi.")
-                return redirect(f"{request.path}?kategori={kategori.id}")
+                print("EKLENEN KATEGORİ:", kategori, kategori.user)
+                messages.success(request, "Kategori başarıyla eklendi.")
+                return redirect(request.path)
+            else:
+                messages.error(request, "Kategori eklenemedi. Lütfen tekrar deneyin.")
         
         elif "sil_kategori" in request.POST:
             sil_id = request.POST.get("sil_kategori_id")
@@ -219,11 +223,12 @@ def fiyat_cek(request):
             kategori_form = KategoriForm(request.POST)
             if kategori_form.is_valid():
                 kategori = kategori_form.save(commit=False)
-                kategori.user = request.user
+                kategori.user = request.user  # Bu satır şart!
                 kategori.save()
-                bildirim_ekle(request.user, f"Yeni kategori eklendi: {kategori.isim}", notification_type="success")
-                messages.success(request, "Kategori eklendi.")
-                return redirect(f"{request.path}?kategori={kategori.id}")
+                messages.success(request, "Kategori başarıyla eklendi.")
+                return redirect(request.path)
+            else:
+                messages.error(request, "Kategori eklenemedi. Lütfen tekrar deneyin.")
         
         elif "sil_kategori" in request.POST:
             sil_id = request.POST.get("sil_kategori_id")
@@ -369,31 +374,23 @@ def bildirim_merkezi(request):
     return render(request, "bildirimler.html", {"bildirimler": bildirimler})
 
 # Blog Views
+from django.core.paginator import Paginator
+from .models import BlogYazisi, BlogKategori
+
 def blog_liste(request):
-    """Blog yazıları listesi"""
-    yazilar = BlogYazisi.objects.filter(yayinlandi=True)
-    kategoriler = BlogKategori.objects.all()
-    
-    # Arama
-    q = request.GET.get('q')
+    q = request.GET.get("q", "")
+    yazilar = BlogYazisi.objects.all()
     if q:
-        yazilar = yazilar.filter(
-            Q(baslik__icontains=q) | 
-            Q(ozet__icontains=q) | 
-            Q(icerik__icontains=q)
-        )
-    
-    # Sayfalama
-    paginator = Paginator(yazilar, 6)
-    page_number = request.GET.get('page')
+        yazilar = yazilar.filter(baslik__icontains=q)
+    paginator = Paginator(yazilar, 9)
+    page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    
-    context = {
-        'page_obj': page_obj,
-        'kategoriler': kategoriler,
-        'q': q,
-    }
-    return render(request, 'blog/liste.html', context)
+    kategoriler = BlogKategori.objects.all()
+    return render(request, "liste.html", {
+        "page_obj": page_obj,
+        "kategoriler": kategoriler,
+        "q": q,
+    })
 
 def blog_kategori(request, kategori_slug):
     """Blog kategori sayfası"""

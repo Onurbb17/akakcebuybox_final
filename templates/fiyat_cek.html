@@ -430,13 +430,8 @@
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
-                            <div class="mb-3">
-                                <label class="form-label">Yeni Kategori</label>
-                                {{ kategori_form.isim }}
-                            </div>
-                            <button type="submit" name="ekle_kategori" class="btn btn-primary w-100">
-                                <i class="fas fa-plus me-2"></i>Kategori Ekle
-                            </button>
+                            {{ kategori_form.as_p }}
+                            <button type="submit" name="ekle_kategori" class="btn btn-primary">Kategori Ekle</button>
                         </form>
 
                         {% if kategoriler %}
@@ -640,17 +635,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Form submission loading states
-        document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const submitBtn = form.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>İşleniyor...';
-                }
-            });
-        });
-
         // Auto-hide alerts
         setTimeout(() => {
             document.querySelectorAll('.alert').forEach(alert => {
@@ -677,6 +661,22 @@
             observer.observe(el);
         });
     </script>
+    <!-- Diğer scriptler veya kodlar -->
+    <script>
+    // document.querySelectorAll('form').forEach(form => {
+    //     form.addEventListener('submit', function(e) {
+    //         const submitBtn = form.querySelector('button[type="submit"]');
+    //         if (submitBtn) {
+    //             submitBtn.disabled = true;
+    //             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>İşleniyor...';
+    //         }
+    //     });
+    // });
+    </script>
 </body>
 </html>
-
+{% if kategori_form.errors %}
+  <div class="alert alert-danger">
+    {{ kategori_form.errors }}
+  </div>
+{% endif %}

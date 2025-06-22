@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Kategori, Eslesme
+from .models import UserProfile, Kategori, Eslesme, BlogYazisi, BlogKategori
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
@@ -28,3 +28,15 @@ class EslesmeAdmin(admin.ModelAdmin):
     def kopyala_linkleri(self, request, queryset):
         self.message_user(request, f"{queryset.count()} eşleşmenin linkleri kopyalandı!")
     kopyala_linkleri.short_description = "Seçilen eşleşmelerin linklerini kopyala"
+
+@admin.register(BlogYazisi)
+class BlogYazisiAdmin(admin.ModelAdmin):
+    list_display = ("baslik", "yayin_tarihi", "yayinlandi")
+    search_fields = ("baslik", "ozet")
+    list_filter = ("yayinlandi", "yayin_tarihi")
+    prepopulated_fields = {"slug": ("baslik",)}
+
+@admin.register(BlogKategori)
+class BlogKategoriAdmin(admin.ModelAdmin):
+    list_display = ("isim",)
+    prepopulated_fields = {"slug": ("isim",)}
